@@ -1,0 +1,6 @@
+export IAM_CLIENT_ID="test-andrea"
+export IAM_CLIENT_SECRET="secret"
+export IAM_TOKEN_ENDPOINT="https://iam.local.io/token"
+export IAM_AUTHORIZATION_ENDPOINT="https://iam.local.io/authorize"
+export IAM_INTROSPECTION_ENDPOINT="https://iam.local.io/introspect"
+export IAM_USERINFO_ENDPOINT="https://iam.local.io/userinfo"
