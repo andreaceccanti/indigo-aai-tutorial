@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
-at=$(cat /tmp/response | jq -r .access_token)
+at=$(jq -r .access_token /tmp/response)
 
-echo "export IAM_ACCESS_TOKEN=\"${at}\""
+export IAM_ACCESS_TOKEN="${at}"

@@ -1,0 +1,6 @@
+{
+   "description": "Deny access to read and write to other users",
+    "rule": "DENY",
+    "scopes": ["condor:/read", "condor:/write"]
+}
+

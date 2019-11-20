@@ -17,9 +17,11 @@ if [[ -z ${IAM_USER} ]]; then
   read -p "Username: " IAM_USER
 fi
 
-echo -ne "Password:"
-read -s IAM_PASSWORD
+if [[ -z ${IAM_PASSWORD} ]]; then
+  echo -ne "Password:"
+  read -s IAM_PASSWORD
 echo
+fi
 
 curl -s -L \
   -d client_id=${IAM_CLIENT_ID} \
@@ -28,4 +30,4 @@ curl -s -L \
   -d username=${IAM_USER} \
   -d password=${IAM_PASSWORD} \
   -d scope="${IAM_CLIENT_SCOPES}" \
-  ${IAM_TOKEN_ENDPOINT} | tee /tmp/response | jq .
+  -d aud="se1 se2" ${IAM_TOKEN_ENDPOINT} | tee /tmp/response | jq .
