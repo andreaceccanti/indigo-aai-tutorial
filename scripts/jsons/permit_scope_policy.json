@@ -1,6 +1,6 @@
 {
    "description": "Allow access to condor submission privleges to escape/pilot users",
-    "rule": "PERMIT",
+    "rule": "ERMIT",
     "scopes": ["condor:/read", "condor:/write"],
     "group": {
        "uuid": "f2d14f52-1a51-40a9-b3ce-62574b426895"

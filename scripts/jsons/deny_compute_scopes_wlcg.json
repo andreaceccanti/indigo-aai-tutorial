@@ -1,0 +1,6 @@
+{
+   "description": "Deny access to compute.* scopes to normal users",
+    "rule": "DENY",
+    "scopes": ["compute.read", "compute.modify", "compute.create", "compute.cancel"],
+    "matchingPolicy": "EQ"
+}

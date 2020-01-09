@@ -1,0 +1,11 @@
+{
+  "client_name": "andrea-test-client",
+  "contacts": [
+    "andrea.ceccanti@cnaf.infn.it"
+  ],
+  "token_endpoint_auth_method": "client_secret_basic",
+  "grant_types": [
+    "client_credentials",
+    "urn:ietf:params:oauth:grant-type:device_code"
+  ]
+}

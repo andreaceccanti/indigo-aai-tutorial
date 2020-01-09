@@ -8,6 +8,8 @@ IAM_TOKEN_ENDPOINT=${IAM_TOKEN_ENDPOINT:-https://iam.local.io/token}
 
 IAM_CLIENT_SCOPES=${IAM_CLIENT_SCOPES:-"openid profile email offline_access"}
 
+IAM_CLIENT_AUDIENCE=${IAM_CLIENT_AUDIENCE:-""}
+
 if [[ -z "${IAM_CLIENT_SECRET}" ]]; then
   echo "Please provide a client secret setting the IAM_CLIENT_SECRET env variable."
   exit 1;
@@ -23,11 +25,24 @@ if [[ -z ${IAM_PASSWORD} ]]; then
 echo
 fi
 
-curl -s -L \
-  -d client_id=${IAM_CLIENT_ID} \
-  -d client_secret=${IAM_CLIENT_SECRET} \
-  -d grant_type=password \
-  -d username=${IAM_USER} \
-  -d password=${IAM_PASSWORD} \
-  -d scope="${IAM_CLIENT_SCOPES}" \
-  -d aud="se1 se2" ${IAM_TOKEN_ENDPOINT} | tee /tmp/response | jq .
+if [ -z "${IAM_CLIENT_AUDIENCE}" ]; then
+
+  curl -s -L \
+    -d client_id=${IAM_CLIENT_ID} \
+    -d client_secret=${IAM_CLIENT_SECRET} \
+    -d grant_type=password \
+    -d username=${IAM_USER} \
+    -d password=${IAM_PASSWORD} \
+    -d scope="${IAM_CLIENT_SCOPES}" \
+    ${IAM_TOKEN_ENDPOINT} | tee /tmp/response | jq .
+else
+  curl -s -L \
+    -d client_id=${IAM_CLIENT_ID} \
+    -d client_secret=${IAM_CLIENT_SECRET} \
+    -d grant_type=password \
+    -d username=${IAM_USER} \
+    -d password=${IAM_PASSWORD} \
+    -d scope="${IAM_CLIENT_SCOPES}" \
+    -d audience="${IAM_CLIENT_AUDIENCE}" \
+    ${IAM_TOKEN_ENDPOINT} | tee /tmp/response | jq .
+fi

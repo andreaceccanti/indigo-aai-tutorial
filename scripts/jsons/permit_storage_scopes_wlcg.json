@@ -1,0 +1,9 @@
+{
+   "description": "Allow access to storage.* scopes to wlcg/xfers users",
+    "rule": "PERMIT",
+    "scopes": ["storage.read:/", "storage.create:/", "storage.modify:/"],
+    "matchingPolicy": "PATH",
+    "group": {
+         "uuid": "f356885a-9d06-4687-b5fe-57322430f111"
+    }
+}

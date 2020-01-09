@@ -1,0 +1,9 @@
+{
+   "description": "Allow access to compute.* scopes to wlcg/pilot users",
+    "rule": "PERMIT",
+    "scopes": ["compute.read", "compute.modify", "compute.create", "compute.cancel"],
+    "matchingPolicy": "EQ",
+    "group": {
+         "uuid": "25084f30-1d71-4ab2-91e8-11148af16682"
+    }
+}

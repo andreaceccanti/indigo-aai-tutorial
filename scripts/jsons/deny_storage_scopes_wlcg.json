@@ -1,0 +1,7 @@
+
+{
+   "description": "Deny access to storage.* scopes to normal users",
+    "rule": "DENY",
+    "scopes": ["storage.read:/", "storage.create:/", "storage.modify:/"],
+    "matchingPolicy": "PATH"
+}

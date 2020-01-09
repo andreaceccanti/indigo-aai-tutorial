@@ -1,35 +1,26 @@
 #!/bin/bash
 set -e
 
+source common.sh
+
 exit_msg() {
   echo "Giving up as requested by user..."
   exit 1
 }
-
-if [[ -z "${IAM_DEVICE_CODE_CLIENT_ID}" ]]; then
-  echo "Please set the IAM_DEVICE_CODE_CLIENT_ID env variable"
-  exit 1
-fi
-
-if [[ -z "${IAM_DEVICE_CODE_CLIENT_SECRET}" ]]; then
-  echo "Please set the IAM_DEVICE_CODE_CLIENT_SECRET env variable"
-  exit 1
-fi
 
 if [[ -z "${IAM_DEVICE_CODE_ENDPOINT}" ]]; then
   echo "Please set the IAM_DEVICE_CODE_ENDPOINT env variable"
   exit 1
 fi
 
-IAM_DEVICE_CODE_CLIENT_SCOPES=${IAM_DEVICE_CODE_CLIENT_SCOPES:-"openid profile email offline_access"}
-IAM_DEVICE_CODE_AUDIENCE=${IAM_DEVICE_CODE_AUDIENCE:-""}
+IAM_CLIENT_AUDIENCE=${IAM_CLIENT_AUDIENCE}
 
 response=$(mktemp)
 
-curl --trace-ascii /tmp/dc-first-req -s -f -L \
-  -u ${IAM_DEVICE_CODE_CLIENT_ID}:${IAM_DEVICE_CODE_CLIENT_SECRET} \
-  -d client_id=${IAM_DEVICE_CODE_CLIENT_ID} \
-  -d scope="${IAM_DEVICE_CODE_CLIENT_SCOPES}" \
+curl -s -f -L \
+  -u ${IAM_CLIENT_ID}:${IAM_CLIENT_SECRET} \
+  -d client_id=${IAM_CLIENT_ID} \
+  -d scope="${IAM_CLIENT_SCOPES}" \
   ${IAM_DEVICE_CODE_ENDPOINT} > ${response}  
 
 if [ $? -ne 0 ]; then
@@ -71,15 +62,22 @@ while true; do
     [[ $a = "n" || $a = "N" ]] && exit 0
   done 
 
-  if [ -n "${IAM_DEVICE_CODE_AUDIENCE}" ]; then
-    curl_aud_opts="-d aud=${IAM_DEVICE_CODE_AUDIENCE} "
+  if [ -n "${IAM_CLIENT_AUDIENCE}" ]; then
+    curl -q -L -s \
+      -u ${IAM_CLIENT_ID}:${IAM_CLIENT_SECRET} \
+      -d grant_type=urn:ietf:params:oauth:grant-type:device_code \
+      -d device_code=${device_code} \
+      -d audience="${IAM_CLIENT_AUDIENCE}" \
+      ${IAM_TOKEN_ENDPOINT} \
+      2>&1 > ${response}
+  else
+    curl -q -L -s \
+      -u ${IAM_CLIENT_ID}:${IAM_CLIENT_SECRET} \
+      -d grant_type=urn:ietf:params:oauth:grant-type:device_code \
+      -d device_code=${device_code} \
+      ${IAM_TOKEN_ENDPOINT} \
+      2>&1 > ${response}
   fi
-
-  curl --trace-ascii /tmp/dc-second-req -q -L -s \
-    -u ${IAM_DEVICE_CODE_CLIENT_ID}:${IAM_DEVICE_CODE_CLIENT_SECRET} \
-    -d grant_type=urn:ietf:params:oauth:grant-type:device_code \
-    -d device_code=${device_code} ${IAM_TOKEN_ENDPOINT} \
-    ${curl_aud_opts} 2>&1 > ${response}
 
   if [ $? -ne 0 ]; then
     echo "Error contacting IAM"
