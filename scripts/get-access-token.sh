@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+if [[ -n "${VERBOSE}" ]]; then
+  set -x
+fi
+
 IAM_CLIENT_ID=${IAM_CLIENT_ID:-iam-client}
 IAM_CLIENT_SECRET=${IAM_CLIENT_SECRET} 
 
